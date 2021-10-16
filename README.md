@@ -1,5 +1,5 @@
 # Argon
-[![Licence](https://img.shields.io/github/license/ArgonLab/Argon)](https://github.com/ArgonLab/Argon/blob/master/LICENSE)
+[![Licence](https://img.shields.io/github/license/GraiaProject/Argon)](https://github.com/GraiaProject/Argon/blob/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/graia-argon)](https://pypi.org/project/graia-argon)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/graia-argon)](https://www.python.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
