@@ -192,7 +192,6 @@ class HttpAdapter(Adapter):
         self, action: str, method: CallMethod, data: Optional[dict] = {}
     ) -> Union[dict, list]:
         data = data or dict()
-        data = {k: str(v) for k, v in data.items()}
         if method == CallMethod.GET or method == CallMethod.RESTGET:
             async with self.session.get(
                 URL(self.mirai_session.url_gen(action)).with_query(data)

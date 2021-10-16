@@ -832,7 +832,9 @@ class ArgonMiraiApplication:
                 "sessionKey": self.session_key,
                 "id": id,
                 "target": target,
-                "withDownloadInfo": with_download_info,
+                "withDownloadInfo": str(
+                    with_download_info
+                ),  # yarl don't accept boolean
                 "offset": offset,
                 "size": size,
             },
@@ -871,7 +873,9 @@ class ArgonMiraiApplication:
                 "sessionKey": self.session_key,
                 "id": id,
                 "target": target,
-                "withDownloadInfo": with_download_info,
+                "withDownloadInfo": str(
+                    with_download_info
+                ),  # yarl don't accept boolean
             },
         )
 

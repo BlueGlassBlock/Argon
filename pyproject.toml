@@ -3,7 +3,7 @@ name = "graia-argon"
 version = "0.1.0"
 description = "An Python SDK of mirai-api-http v2, based on graia-broadcast."
 authors = ["BlueGlassBlock <blueglassblock@outlook.com>", "GreyElaina <GreyElaina@outlook.com>"]
-license = "AGPL-v3"
+license = "AGPL-3.0"
 packages = [
     { include = "graia", from = "src" }
 ]

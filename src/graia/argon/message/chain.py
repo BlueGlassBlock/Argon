@@ -22,7 +22,7 @@ class MessageChain(BaseModel):
 
     @staticmethod
     def build_chain(obj: List[Union[dict, Element]]) -> List[Element]:
-        """内部接口, 会自动将作为外部态的消息元素转为内部态.
+        """内部接口, 会自动反序列化对象并生成.
 
         Args:
             obj (List[T]): 需要反序列化的对象
