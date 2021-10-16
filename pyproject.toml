@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "graia-argon"
-version = "0.1.1"
+version = "0.1.2"
 description = "An Python SDK of mirai-api-http v2, based on graia-broadcast."
 authors = ["BlueGlassBlock <blueglassblock@outlook.com>", "GreyElaina <GreyElaina@outlook.com>"]
 license = "AGPL-3.0"
