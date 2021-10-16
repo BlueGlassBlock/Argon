@@ -76,7 +76,7 @@ class BotOfflineEventDropped(MiraiEvent):
     Dispatcher = ApplicationDispatcher
 
 
-class BotReLoginEvent(MiraiEvent):
+class BotReloginEvent(MiraiEvent):
     """当该事件发生时, 应用实例所辖账号正尝试重新登录
 
     ** 注意: 当监听该事件或该类事件时, 请优先考虑使用原始事件类作为类型注解, 以此获得事件类实例, 便于获取更多的信息! **
@@ -85,7 +85,7 @@ class BotReLoginEvent(MiraiEvent):
         ArgonMiraiApplication (annotation): 发布事件的应用实例
     """
 
-    type = "BotReLoginEvent"
+    type = "BotReloginEvent"
     qq: int
 
     Dispatcher = ApplicationDispatcher
