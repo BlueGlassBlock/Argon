@@ -1,5 +1,7 @@
 # Argon
 [![Licence](https://img.shields.io/github/license/ArgonLab/Argon)](https://github.com/ArgonLab/Argon/blob/master/LICENSE)
+![PyPI](https://img.shields.io/pypi/v/graia-argon)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/graia-argon)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?labelColor=ef8336)](https://pycqa.github.io/isort/)
 
@@ -10,7 +12,7 @@ ______________________
 
 **本项目适用于 mirai-api-http 2.0 以上版本**。
 
-目前仍处于开发阶段，各种内容可能会有较大的变化。
+目前仍处于开发阶段，内部接口可能会有较大的变化。
 
 ## 鸣谢&相关项目
 > 这些项目也很棒, 去他们的项目页看看, 点个 `Star` 以鼓励他们的开发工作, 毕竟没有他们也没有 `Argon`.
