@@ -18,7 +18,7 @@ if __name__ == "__main__":
     url, account, verify_key = (
         open(os.path.join(__file__, "..", "test.temp"), "r").read().split(" ")
     )
-
+    ALL_FLAG = False
     loop = asyncio.new_event_loop()
     loop.set_debug(True)
     bcc = Broadcast(loop=loop)
@@ -33,19 +33,20 @@ if __name__ == "__main__":
         await app.launch()
         logger.debug(await app.getVersion())
         logger.debug(await app.getBotProfile())
-        group_list = await app.getGroupList()
-        logger.debug(group_list)
-        friend_list = await app.getFriendList()
-        logger.debug(friend_list)
-        member_list = await app.getMemberList(group_list[0])
-        logger.debug(member_list)
-        logger.debug(await app.getFriendProfile(friend_list[0]))
-        logger.debug(await app.getMemberProfile(member_list[0], group_list[0]))
-        logger.debug(await app.getMemberProfile(member_list[0]))
-        logger.debug(
-            await app.listFile(group_list[0], size=1024, with_download_info=True)
-            # Fetching file info is VERY time consuming
-        )
+        if ALL_FLAG:
+            group_list = await app.getGroupList()
+            logger.debug(group_list)
+            friend_list = await app.getFriendList()
+            logger.debug(friend_list)
+            member_list = await app.getMemberList(group_list[0])
+            logger.debug(member_list)
+            logger.debug(await app.getFriendProfile(friend_list[0]))
+            logger.debug(await app.getMemberProfile(member_list[0], group_list[0]))
+            logger.debug(await app.getMemberProfile(member_list[0]))
+            logger.debug(
+                await app.listFile(group_list[0], size=1024, with_download_info=True)
+                # Fetching file info is VERY time consuming
+            )
         await app.lifecycle()
 
     try:

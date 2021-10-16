@@ -424,6 +424,10 @@ class DebugAdapter(DefaultAdapter):
         Returns:
             MiraiEvent: 已经被序列化的事件
         """
-        event = await super().build_event(data)
-        logger.debug(event)
+        try:
+            event = await super().build_event(data)
+        except ValueError as e:
+            logger.exception(e)
+        else:
+            logger.debug(event)
         return event
