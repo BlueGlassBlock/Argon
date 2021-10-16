@@ -1,17 +1,119 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Union
-
+from typing import TYPE_CHECKING, Optional, Union
+from loguru import logger
 from pydantic import BaseModel, Field, validator
 from pydantic.main import BaseConfig, Extra
 from pydantic.networks import AnyHttpUrl
 from typing_extensions import Literal
 from yarl import URL
 
+if TYPE_CHECKING:
+    from graia.argon import ArgonMiraiApplication
+
 
 class ArgonBaseModel(BaseModel):
     class Config(BaseConfig):
         extra = Extra.allow
+
+
+class ChatLogConfig(BaseModel):
+    enabled: bool = True
+    log_level: str = "INFO"
+    group_message_log_format: str = "{bot_id}: [{group_name}({group_id})] {member_name}({member_id}) -> {message_string}"
+    friend_message_log_format: str = (
+        "{bot_id}: [{friend_name}({friend_id})] -> {message_string}"
+    )
+    temp_message_log_format: str = "{bot_id}: [{group_name}({group_id}.{member_name}({member_id})] -> {message_string}"
+    other_client_message_log_format: str = (
+        "{bot_id}: [{platform_name}({platform_id})] -> {message_string}"
+    )
+    stranger_message_log_format: str = (
+        "{bot_id}: [{stranger_name}({stranger_id})] -> {message_string}"
+    )
+
+    def initialize(self, app: "ArgonMiraiApplication"):
+        from graia.argon.event.message import (
+            GroupMessage,
+            FriendMessage,
+            TempMessage,
+            OtherClientMessage,
+            StrangerMessage,
+        )
+
+        @app.broadcast.receiver(GroupMessage)
+        def log_group_message(event: GroupMessage):
+            logger.log(
+                self.log_level,
+                self.group_message_log_format.format_map(
+                    dict(
+                        group_id=event.sender.group.id,
+                        group_name=event.sender.group.name,
+                        member_id=event.sender.id,
+                        member_name=event.sender.name,
+                        member_permission=event.sender.permission.name,
+                        bot_id=app.mirai_session.account,
+                        bot_permission=event.sender.group.accountPerm.name,
+                        message_string=event.messageChain.asDisplay().__repr__(),
+                    )
+                ),
+            )
+
+        @app.broadcast.receiver(FriendMessage)
+        def log_friend_message(event: FriendMessage):
+            logger.log(
+                self.log_level,
+                self.friend_message_log_format.format_map(
+                    dict(
+                        bot_id=app.mirai_session.account,
+                        friend_name=event.sender.nickname,
+                        friend_id=event.sender.id,
+                        message_string=event.messageChain.asDisplay().__repr__(),
+                    )
+                ),
+            )
+
+        @app.broadcast.receiver(TempMessage)
+        def log_temp_message(event: TempMessage):
+            logger.log(
+                self.log_level,
+                self.temp_message_log_format.format_map(
+                    dict(
+                        group_id=event.sender.group.id,
+                        group_name=event.sender.group.name,
+                        member_id=event.sender.id,
+                        member_name=event.sender.name,
+                        member_permission=event.sender.permission.name,
+                        bot_id=app.mirai_session.account,
+                        bot_permission=event.sender.group.accountPerm.name,
+                        message_string=event.messageChain.asDisplay().__repr__(),
+                    )
+                ),
+            )
+
+        @app.broadcast.receiver(StrangerMessage)
+        def log_stranger_message(event: StrangerMessage):
+            logger.log(
+                self.log_level,
+                self.stranger_message_log_format.format_map(
+                    bot_id=app.mirai_session.account,
+                    stranger_name=event.sender.nickname,
+                    stranger_id=event.sender.id,
+                    message_string=event.messageChain.asDisplay().__repr__(),
+                ),
+            )
+
+        @app.broadcast.receiver(OtherClientMessage)
+        def log_other_client_message(event: OtherClientMessage):
+            logger.log(
+                self.log_level,
+                self.other_client_message_log_format.format_map(
+                    bot_id=app.mirai_session.account,
+                    platform_name=event.sender.platform,
+                    platform_id=event.sender.id,
+                    message_string=event.messageChain.asDisplay().__repr__(),
+                ),
+            )
 
 
 class MiraiSession(ArgonBaseModel):

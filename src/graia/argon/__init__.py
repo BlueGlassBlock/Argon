@@ -33,12 +33,14 @@ from graia.argon.message.chain import MessageChain
 from graia.argon.model import (
     BotMessage,
     CallMethod,
+    ChatLogConfig,
     FileInfo,
     Friend,
     Group,
     GroupConfig,
     Member,
     MemberInfo,
+    MiraiSession,
     Profile,
     UploadMethod,
 )
@@ -50,17 +52,23 @@ class ArgonMiraiApplication:
         self,
         broadcast: Broadcast,
         adapter: Adapter,
+        *,
+        chat_log_config: Optional[ChatLogConfig] = None,
     ):
         self.broadcast: Broadcast = broadcast
         self.adapter: Adapter = adapter
+        self.mirai_session: MiraiSession = adapter.mirai_session
         self.loop: AbstractEventLoop = broadcast.loop
         self.daemon_task: Optional[Task] = None
-        self.running = False
-        self.remote_version = ""
+        self.running: bool = False
+        self.remote_version: str = ""
+        self.chat_log_cfg: ChatLogConfig = (
+            chat_log_config if chat_log_config else ChatLogConfig()
+        )
 
     @property
     def session_key(self) -> Optional[str]:
-        return self.adapter.mirai_session.session_key
+        return self.mirai_session.session_key
 
     async def daemon(self, retry_interval: float = 5.0):
         logger.debug("Application daemon started.")
@@ -91,6 +99,8 @@ class ArgonMiraiApplication:
             self.broadcast.dispatcher_interface.inject_global_raw(
                 ApplicationMiddlewareDispatcher(self)
             )
+            if self.chat_log_cfg.enabled:
+                self.chat_log_cfg.initialize(self)
             self.daemon_task = self.loop.create_task(self.daemon())
             while not self.adapter.session_activated:
                 await asyncio.sleep(0.001)
@@ -126,14 +136,14 @@ class ArgonMiraiApplication:
 
     @app_ctx_manager
     async def getVersion(self, auto_set: bool = True):
-        if self.adapter.mirai_session.version:
-            return self.adapter.mirai_session.version
+        if self.mirai_session.version:
+            return self.mirai_session.version
         result = await self.adapter.call_api.__wrapped__(
             self.adapter, "about", CallMethod.GET
         )
         version = result["version"]
         if auto_set:
-            self.adapter.mirai_session.version = version
+            self.mirai_session.version = version
         return version
 
     @app_ctx_manager
@@ -301,7 +311,7 @@ class ArgonMiraiApplication:
             logger.info(
                 "[BOT {bot_id}] Friend({friend_id}) <- {message}".format_map(
                     {
-                        "bot_id": self.adapter.mirai_session.account,
+                        "bot_id": self.mirai_session.account,
                         "friend_id": target.id
                         if isinstance(target, Friend)
                         else target,
@@ -349,7 +359,7 @@ class ArgonMiraiApplication:
             logger.info(
                 "[BOT {bot_id}] Group({group_id}) <- {message}".format_map(
                     {
-                        "bot_id": self.adapter.mirai_session.account,
+                        "bot_id": self.mirai_session.account,
                         "group_id": group.id if isinstance(group, Group) else group,
                         "message": new_msg.asDisplay(),
                     }
@@ -398,7 +408,7 @@ class ArgonMiraiApplication:
             logger.info(
                 "[BOT {bot_id}] Member({member_id}, in {group_id}) <- {message}".format_map(
                     {
-                        "bot_id": self.adapter.mirai_session.account,
+                        "bot_id": self.mirai_session.account,
                         "member_id": target.id
                         if isinstance(target, Member)
                         else target,

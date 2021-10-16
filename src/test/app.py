@@ -26,10 +26,7 @@ if __name__ == "__main__":
     app = ArgonMiraiApplication(bcc, adapter)
 
     @bcc.receiver(FriendMessage)
-    async def print_msg(
-        app: ArgonMiraiApplication, chain: MessageChain, friend: Friend
-    ):
-        logger.info(f"[{await app.getFriendProfile(friend)}] -> {chain.asDisplay()}")
+    async def reply(app: ArgonMiraiApplication, chain: MessageChain, friend: Friend):
         await app.sendFriendMessage(friend, MessageChain.create("Hello, World!"))
 
     async def main():
