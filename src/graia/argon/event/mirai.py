@@ -1,10 +1,11 @@
 from datetime import datetime
-from typing import Any, Dict, List, Literal, Optional, Type
+from typing import Any, Dict, List, Optional
 
 from graia.broadcast.entities.dispatcher import BaseDispatcher
 from graia.broadcast.interfaces.dispatcher import DispatcherInterface
 from pydantic import Field
 from pydantic.class_validators import validator
+from typing_extensions import Literal
 
 from graia.argon.context import adapter_ctx
 from graia.argon.dispatcher import ApplicationDispatcher

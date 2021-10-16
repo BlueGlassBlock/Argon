@@ -14,7 +14,7 @@ default = false
 url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple/"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 graia-broadcast = "^0.13.1"
 aiohttp = "^3.7.4"
 pydantic = "^1.8.2"

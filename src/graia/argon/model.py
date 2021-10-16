@@ -1,10 +1,11 @@
 from datetime import datetime
 from enum import Enum
-from typing import Any, Literal, Optional, Union
+from typing import Optional, Union
 
 from pydantic import BaseModel, Field, validator
 from pydantic.main import BaseConfig, Extra
 from pydantic.networks import AnyHttpUrl
+from typing_extensions import Literal
 from yarl import URL
 
 
